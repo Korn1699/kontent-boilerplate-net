@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Kentico.Kontent.Delivery;
 using Newtonsoft.Json.Linq;
 
-namespace Kentico.Kontent.Boilerplate.Caching.Default
+namespace Kentico.Kontent.Delivery.Caching.Webhooks
 {
     public class CachingDeliveryClient : IDeliveryClient
     {
@@ -29,6 +28,7 @@ namespace Kentico.Kontent.Boilerplate.Caching.Default
             return await CacheManager.GetOrAddAsync(
                 CacheHelper.GetItemJsonKey(codename, parameters),
                 () => DeliveryClient.GetItemJsonAsync(codename, parameters),
+                CacheHelper.GetItemJsonDependencies,
                 response => response != null);
         }
 
@@ -42,6 +42,7 @@ namespace Kentico.Kontent.Boilerplate.Caching.Default
             return await CacheManager.GetOrAddAsync(
                 CacheHelper.GetItemsJsonKey(parameters),
                 () => DeliveryClient.GetItemsJsonAsync(parameters),
+                CacheHelper.GetItemsJsonDependencies,
                 response => response["items"].Any());
         }
 
@@ -80,6 +81,7 @@ namespace Kentico.Kontent.Boilerplate.Caching.Default
             return await CacheManager.GetOrAddAsync(
                 CacheHelper.GetItemKey(codename, queryParameters),
                 () => DeliveryClient.GetItemAsync(codename, queryParameters),
+                CacheHelper.GetItemDependencies,
                 response => response != null);
         }
 
@@ -96,6 +98,7 @@ namespace Kentico.Kontent.Boilerplate.Caching.Default
             return await CacheManager.GetOrAddAsync(
                 CacheHelper.GetItemTypedKey(codename, queryParameters),
                 () => DeliveryClient.GetItemAsync<T>(codename, queryParameters),
+                CacheHelper.GetItemDependencies,
                 response => response != null);
         }
 
@@ -121,6 +124,7 @@ namespace Kentico.Kontent.Boilerplate.Caching.Default
             return await CacheManager.GetOrAddAsync(
                 CacheHelper.GetItemsKey(queryParameters),
                 () => DeliveryClient.GetItemsAsync(queryParameters),
+                CacheHelper.GetItemsDependencies,
                 response => response.Items.Any());
         }
 
@@ -148,6 +152,7 @@ namespace Kentico.Kontent.Boilerplate.Caching.Default
             return await CacheManager.GetOrAddAsync(
                 CacheHelper.GetItemsTypedKey(queryParameters),
                 () => DeliveryClient.GetItemsAsync<T>(queryParameters),
+                CacheHelper.GetItemsDependencies,
                 response => response.Items.Any());
         }
 
@@ -203,6 +208,7 @@ namespace Kentico.Kontent.Boilerplate.Caching.Default
             return await CacheManager.GetOrAddAsync(
                 CacheHelper.GetTypeJsonKey(codename),
                 () => DeliveryClient.GetTypeJsonAsync(codename),
+                CacheHelper.GetTypeJsonDependencies,
                 response => response != null);
         }
 
@@ -216,6 +222,7 @@ namespace Kentico.Kontent.Boilerplate.Caching.Default
             return await CacheManager.GetOrAddAsync(
                 CacheHelper.GetTypesJsonKey(parameters),
                 () => DeliveryClient.GetTypesJsonAsync(parameters),
+                CacheHelper.GetTypesJsonDependencies,
                 response => response["types"].Any());
         }
 
@@ -229,6 +236,7 @@ namespace Kentico.Kontent.Boilerplate.Caching.Default
             return await CacheManager.GetOrAddAsync(
                 CacheHelper.GetTypeKey(codename),
                 () => DeliveryClient.GetTypeAsync(codename),
+                CacheHelper.GetTypeDependencies,
                 response => response != null);
         }
 
@@ -253,6 +261,7 @@ namespace Kentico.Kontent.Boilerplate.Caching.Default
             return await CacheManager.GetOrAddAsync(
                 CacheHelper.GetTypesKey(queryParameters),
                 () => DeliveryClient.GetTypesAsync(queryParameters),
+                CacheHelper.GetTypesDependencies,
                 response => response.Types.Any());
         }
 
@@ -268,6 +277,7 @@ namespace Kentico.Kontent.Boilerplate.Caching.Default
             return await CacheManager.GetOrAddAsync(
                 CacheHelper.GetContentElementKey(contentTypeCodename, contentElementCodename),
                 () => DeliveryClient.GetContentElementAsync(contentTypeCodename, contentElementCodename),
+                CacheHelper.GetContentElementDependencies,
                 response => response != null);
         }
 
@@ -281,6 +291,7 @@ namespace Kentico.Kontent.Boilerplate.Caching.Default
             return await CacheManager.GetOrAddAsync(
                 CacheHelper.GetTaxonomyJsonKey(codename),
                 () => DeliveryClient.GetTaxonomyJsonAsync(codename),
+                CacheHelper.GetTaxonomyJsonDependencies,
                 response => response != null);
         }
 
@@ -294,6 +305,7 @@ namespace Kentico.Kontent.Boilerplate.Caching.Default
             return await CacheManager.GetOrAddAsync(
                 CacheHelper.GetTaxonomiesJsonKey(parameters),
                 () => DeliveryClient.GetTaxonomiesJsonAsync(parameters),
+                CacheHelper.GetTaxonomiesJsonDependencies,
                 response => response["taxonomies"].Any());
         }
 
@@ -307,6 +319,7 @@ namespace Kentico.Kontent.Boilerplate.Caching.Default
             return await CacheManager.GetOrAddAsync(
                 CacheHelper.GetTaxonomyKey(codename),
                 () => DeliveryClient.GetTaxonomyAsync(codename),
+                CacheHelper.GetTaxonomyDependencies,
                 response => response != null);
         }
 
@@ -331,6 +344,7 @@ namespace Kentico.Kontent.Boilerplate.Caching.Default
             return await CacheManager.GetOrAddAsync(
                 CacheHelper.GetTaxonomiesKey(queryParameters),
                 () => DeliveryClient.GetTaxonomiesAsync(queryParameters),
+                CacheHelper.GetTaxonomiesDependencies,
                 response => response.Taxonomies.Any());
         }
     }

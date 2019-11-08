@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Kentico.Kontent.Boilerplate.Caching;
+using Kentico.Kontent.Delivery.Caching;
 using Xunit;
 
 using static Kentico.Kontent.Boilerplate.Tests.Caching.ResponseHelper;

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using FluentAssertions;
-using Kentico.Kontent.Boilerplate.Caching;
 using Kentico.Kontent.Delivery;
+using Kentico.Kontent.Delivery.Caching;
 using Xunit;
 
 namespace Kentico.Kontent.Boilerplate.Tests.Caching

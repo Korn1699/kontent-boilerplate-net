@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Kentico.Kontent.Boilerplate.Helpers;
-using Kentico.Kontent.Delivery;
 using Newtonsoft.Json.Linq;
 
-namespace Kentico.Kontent.Boilerplate.Caching
+namespace Kentico.Kontent.Delivery.Caching
 {
     public class CacheHelper
     {

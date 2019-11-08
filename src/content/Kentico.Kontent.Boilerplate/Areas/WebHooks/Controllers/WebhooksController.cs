@@ -4,8 +4,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Kentico.Kontent.Boilerplate.Filters;
 using Kentico.Kontent.Boilerplate.Areas.WebHooks.Models;
-using Kentico.Kontent.Boilerplate.Caching;
-using Kentico.Kontent.Boilerplate.Caching.Webhooks;
+using Kentico.Kontent.Delivery.Caching;
+using Kentico.Kontent.Delivery.Caching.Webhooks;
 
 namespace Kentico.Kontent.Boilerplate.Areas.WebHooks.Controllers
 {

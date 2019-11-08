@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
-using Kentico.Kontent.Boilerplate.Caching;
-using Kentico.Kontent.Boilerplate.Caching.Webhooks;
 using Kentico.Kontent.Delivery;
+using Kentico.Kontent.Delivery.Caching;
+using Kentico.Kontent.Delivery.Caching.Webhooks;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 

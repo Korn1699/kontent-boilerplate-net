@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Kentico.Kontent.Boilerplate.Caching;
+using Kentico.Kontent.Delivery.Caching;
 
 namespace Kentico.Kontent.Boilerplate
 {

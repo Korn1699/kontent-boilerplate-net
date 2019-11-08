@@ -33,4 +33,8 @@
     <Folder Include="Models\ContentTypes\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Kentico.Kontent.Delivery.Caching\Kentico.Kontent.Delivery.Caching.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Kentico.Kontent.Delivery;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
 
-namespace Kentico.Kontent.Boilerplate.Caching.Default
+namespace Kentico.Kontent.Delivery.Caching.Webhooks
 {
     public class CacheManager : ICacheManager, IDisposable
     {
         private readonly IMemoryCache _memoryCache;
         private readonly CacheOptions _cacheOptions;
         private readonly ConcurrentDictionary<string, SemaphoreSlim> _createLocks = new ConcurrentDictionary<string, SemaphoreSlim>();
+        private readonly ConcurrentDictionary<string, object> _dependencyLocks = new ConcurrentDictionary<string, object>();
 
 
         public CacheManager(IMemoryCache memoryCache, IOptions<CacheOptions> cacheOptions)
@@ -21,7 +23,7 @@ namespace Kentico.Kontent.Boilerplate.Caching.Default
             _cacheOptions = cacheOptions.Value ?? new CacheOptions();
         }
 
-        public async Task<T> GetOrAddAsync<T>(string key, Func<Task<T>> valueFactory, Func<T, bool> shouldCache = null)
+        public async Task<T> GetOrAddAsync<T>(string key, Func<Task<T>> valueFactory, Func<T, IEnumerable<string>> dependenciesFactory, Func<T, bool> shouldCache = null)
         {
             if (TryGet(key, out T entry))
             {
@@ -54,17 +56,39 @@ namespace Kentico.Kontent.Boilerplate.Caching.Default
                 }
                 else
                 {
-                    valueCacheOptions.SetAbsoluteExpiration(_cacheOptions.DefaultTimeout);
+                    valueCacheOptions.SetSlidingExpiration(_cacheOptions.DefaultTimeout);
                 }
-                
+
+                var dependencies = dependenciesFactory?.Invoke(value) ?? new List<string>();
+                var dependencyCacheOptions = new MemoryCacheEntryOptions { Priority = CacheItemPriority.NeverRemove };
+                foreach (var dependency in dependencies)
+                {
+                    var dependencyKey = dependency;
+                    var dependencyLock = _dependencyLocks.GetOrAdd(dependencyKey, _ => new object());
+
+                    if (!_memoryCache.TryGetValue(dependencyKey, out CancellationTokenSource tokenSource) || tokenSource.IsCancellationRequested)
+                    {
+                        lock (dependencyLock)
+                        {
+                            if (!_memoryCache.TryGetValue(dependencyKey, out tokenSource) || tokenSource.IsCancellationRequested)
+                            {
+                                tokenSource = _memoryCache.Set(dependencyKey, new CancellationTokenSource(), dependencyCacheOptions);
+                            }
+                        }
+                    }
+
+                    if (tokenSource != null)
+                    {
+                        valueCacheOptions.AddExpirationToken(new CancellationChangeToken(tokenSource.Token));
+                    }
+                }
+
                 return _memoryCache.Set(key, value, valueCacheOptions);
             }
             finally
             {
                 entryLock.Release();
             }
-
-
         }
 
         public bool TryGet<T>(string key, out T value)
@@ -75,6 +99,19 @@ namespace Kentico.Kontent.Boilerplate.Caching.Default
             }
 
             return _memoryCache.TryGetValue(key, out value);
+        }
+
+        public void InvalidateDependency(string key)
+        {
+            if (key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            if (TryGet(key, out CancellationTokenSource tokenSource))
+            {
+                tokenSource.Cancel();
+            }
         }
 
         public void Dispose()

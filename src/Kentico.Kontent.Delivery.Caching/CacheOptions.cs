@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Kentico.Kontent.Boilerplate.Caching
+namespace Kentico.Kontent.Delivery.Caching
 {
     public class CacheOptions
     {

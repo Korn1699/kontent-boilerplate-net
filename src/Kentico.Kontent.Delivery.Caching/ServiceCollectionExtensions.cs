@@ -1,10 +1,8 @@
 ﻿using System;
-using Kentico.Kontent.Boilerplate.Caching.Webhooks;
-using Kentico.Kontent.Delivery;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Kentico.Kontent.Boilerplate.Caching
+namespace Kentico.Kontent.Delivery.Caching
 {
     public static class ServiceCollectionExtensions
     {
@@ -28,10 +26,10 @@ namespace Kentico.Kontent.Boilerplate.Caching
             {
                 services.Configure(configureCacheOptions);
             }
-            services.TryAddSingleton<ICacheManager, CacheManager>();
+            services.TryAddSingleton<Webhooks.ICacheManager, Webhooks.CacheManager>();
 
-            services.AddSingleton<IDeliveryClient>(sp => new CachingDeliveryClient(
-                sp.GetRequiredService<ICacheManager>(),
+            services.AddSingleton<IDeliveryClient>(sp => new Webhooks.CachingDeliveryClient(
+                sp.GetRequiredService<Webhooks.ICacheManager>(),
                 baseClientFactory(sp)));
             return services;
         }

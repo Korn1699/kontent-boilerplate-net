@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Kentico.Kontent.Boilerplate.Caching.Default
+namespace Kentico.Kontent.Delivery.Caching.Default
 {
     public interface ICacheManager
     {
